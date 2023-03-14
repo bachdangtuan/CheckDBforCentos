@@ -83,7 +83,7 @@ curl -X POST http://10.0.0.210:5000/api/databases/info \
 
 
 
-pg_dump $DBNAME > $DBNAME_$DATE.sql
+pg_dump $DBNAME > ${DBNAME}_$DATE.sql
 case $? in
   1)
    alertTelegramError
