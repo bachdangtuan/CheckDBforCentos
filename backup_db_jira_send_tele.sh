@@ -1,20 +1,16 @@
 #!/bin/bash
 
-# Doi ten db can backup va duong dan luu backup
-DBNAME="jira_20221130";
-path_backup='/opt/backupJi_conf/'
-
-
-
-
+#Bien moi truong
 TOKEN="6112203391:AAEuDTYX3KQRNuoLKuJ0NAtpRoamdHIQQkA"
 CHAT_ID="-957135587"
 URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
+DB_NAME="jira_20221130";
 hostname=$(hostname)
 myip=$(hostname -I | awk '{print $1}')
 host_ip=$myip
 hostname_server=$hostname
 os_systems=$(grep "PRETTY_NAME" /etc/os-release | awk -F= '{ print $2 }' | tr -d '"')
+path_backup='/opt/backupJi_conf/'
 export DATE=`date +%Y_%m_%d_%H_%M`
 
 
@@ -25,7 +21,7 @@ cd $path_backup
 ERROR="
 ==[BACKUP-ERROR]==
 Server: ${hostname_server}
-Database: ${DBNAME}
+Database: ${DB_NAME}
 Address IP : ${host_ip} / 24
 Content: Backup backup du lieu khong thanh cong !
 --------
@@ -35,7 +31,7 @@ Nguyen nhan: Backup DB backup bi ngat giua chung, quyen truy cap sai, hoac khong
 SUCCESS="
 ==[BACKUP-SUCCESS]==
 Server: ${hostname_server}
-Database: ${DBNAME}
+Database: ${DB_NAME}
 Address IP : ${host_ip} / 24
 Nguyen nhan: Backup Dump thanh cong databases !
 "
@@ -57,28 +53,28 @@ curl -s -X POST $URL \
 
 
 sendSuccessServer(){
-capacityFile=$(du -sh jira_$DATE.sql | awk '{print $1}')
+capacityFile=$(du -sh ${DB_NAME}_$DATE.sql | awk '{print $1}')
 
 curl -X POST http://10.0.0.210:5000/api/databases/info \
 -H "Content-Type: application/json" \
 -d '{"ipServer": "'"$host_ip"'",
     "hostname": "'"$hostname_server"'",
     "osSystems": "'"$os_systems"'",
-    "nameDatabase": "'"$DBNAME"'",
+    "nameDatabase": "'"$DB_NAME"'",
     "pathBackup": "'"$path_backup"'",
     "status": "backup",
     "capacityFile": "'"$capacityFile"'"
     }'
 }
 sendErrorServer(){
-capacityFile=$(du -sh jira_$DATE.sql | awk '{print $1}')
+capacityFile=$(du -sh ${DB_NAME}_$DATE.sql | awk '{print $1}')
 
 curl -X POST http://10.0.0.210:5000/api/databases/info \
 -H "Content-Type: application/json" \
 -d '{"ipServer": "'"$host_ip"'",
     "hostname": "'"$hostname_server"'",
     "osSystems": "'"$os_systems"'",
-    "nameDatabase": "'"$DBNAME"'",
+    "nameDatabase": "'"$DB_NAME"'",
     "pathBackup": "'"$path_backup"'",
     "status": "error",
     "capacityFile": "'"$capacityFile"'"
@@ -87,7 +83,7 @@ curl -X POST http://10.0.0.210:5000/api/databases/info \
 
 
 
-pg_dump $DBNAME > ${DBNAME}_$DATE.sql
+pg_dump $DB_NAME > ${DB_NAME}_$DATE.sql
 case $? in
   1)
    alertTelegramError
@@ -104,4 +100,3 @@ case $? in
    echo 'No content'
    ;;
 esac
-
