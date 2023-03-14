@@ -1,16 +1,20 @@
 #!/bin/bash
 
-# Bien moi truong
+# Doi ten db can backup va duong dan luu backup
+DBNAME="jira_20221130";
+path_backup='/opt/backupJi_conf/'
+
+
+
+
 TOKEN="6112203391:AAEuDTYX3KQRNuoLKuJ0NAtpRoamdHIQQkA"
 CHAT_ID="-957135587"
 URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
-DBNAME="jira_20221130";
 hostname=$(hostname)
 myip=$(hostname -I | awk '{print $1}')
 host_ip=$myip
 hostname_server=$hostname
 os_systems=$(grep "PRETTY_NAME" /etc/os-release | awk -F= '{ print $2 }' | tr -d '"')
-path_backup='/opt/backupJi_conf/'
 export DATE=`date +%Y_%m_%d_%H_%M`
 
 
