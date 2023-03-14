@@ -4,7 +4,7 @@
 TOKEN="6112203391:AAEuDTYX3KQRNuoLKuJ0NAtpRoamdHIQQkA"
 CHAT_ID="-957135587"
 URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
-DB_NAME="jira_20221130";
+DBNAME="jira_20221130";
 hostname=$(hostname)
 myip=$(hostname -I | awk '{print $1}')
 host_ip=$myip
@@ -21,7 +21,7 @@ cd $path_backup
 ERROR="
 ==[BACKUP-ERROR]==
 Server: ${hostname_server}
-Database: ${DB_NAME}
+Database: ${DBNAME}
 Address IP : ${host_ip} / 24
 Content: Backup backup du lieu khong thanh cong !
 --------
@@ -31,7 +31,7 @@ Nguyen nhan: Backup DB backup bi ngat giua chung, quyen truy cap sai, hoac khong
 SUCCESS="
 ==[BACKUP-SUCCESS]==
 Server: ${hostname_server}
-Database: ${DB_NAME}
+Database: ${DBNAME}
 Address IP : ${host_ip} / 24
 Nguyen nhan: Backup Dump thanh cong databases !
 "
@@ -60,7 +60,7 @@ curl -X POST http://10.0.0.210:5000/api/databases/info \
 -d '{"ipServer": "'"$host_ip"'",
     "hostname": "'"$hostname_server"'",
     "osSystems": "'"$os_systems"'",
-    "nameDatabase": "'"$DB_NAME"'",
+    "nameDatabase": "'"$DBNAME"'",
     "pathBackup": "'"$path_backup"'",
     "status": "backup",
     "capacityFile": "'"$capacityFile"'"
@@ -74,7 +74,7 @@ curl -X POST http://10.0.0.210:5000/api/databases/info \
 -d '{"ipServer": "'"$host_ip"'",
     "hostname": "'"$hostname_server"'",
     "osSystems": "'"$os_systems"'",
-    "nameDatabase": "'"$DB_NAME"'",
+    "nameDatabase": "'"$DBNAME"'",
     "pathBackup": "'"$path_backup"'",
     "status": "error",
     "capacityFile": "'"$capacityFile"'"
@@ -83,7 +83,7 @@ curl -X POST http://10.0.0.210:5000/api/databases/info \
 
 
 
-pg_dump $DB_NAME > jira_$DATE.sql
+pg_dump $DBNAME > $DBNAME_$DATE.sql
 case $? in
   1)
    alertTelegramError
